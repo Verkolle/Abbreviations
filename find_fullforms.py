@@ -1,4 +1,5 @@
 import re
+
 # Necessary files for processing sentences.
 fullforms = "text/abbreviation_fullforms.txt"
 infile = "text/tagged.txt"
@@ -8,18 +9,21 @@ ff_contractions = []
 
 
 def split_sentence(sentence, check, fout):
-    s = sentence.split(" " + check + " ")
-    new_sentence = ""
+    ff = " " + check[0].lower()
+    abbrev = " " + check[1].lower()
 
-    for i in range(len(s)):
-        if i == 0:
-            new_sentence += s[i]
-        else:
-            new_sentence += " " + check[1] + " "
-            new_sentence += s[i]
+    ff_regex = re.compile("{}(?![a-zA-ZāčēģīķļņšūžĀČĒĢĪĶĻŅŠŪŽ])".format(ff))
+    s = re.split(ff_regex, sentence)
+
+    # Splitting as such is much faster, but doesn't take into account abbrevs followed by punctuation.
+    # s = sentence.split(ff+" ")
 
     if len(s) > 1:
-        fout.write(new_sentence + "\n")
+        for i in range(len(s) - 1):
+            new_sentence = ff.join(s[:i+1]) + abbrev + ff.join(s[i+1:])
+            if sentence[-2:] != ".." and new_sentence[-2:] == "..":
+                new_sentence = new_sentence[:-1]
+            fout.write(new_sentence + "\n")
 
 
 def split_lemmatized(sentence, lemmatized, check, fout):
@@ -27,17 +31,21 @@ def split_lemmatized(sentence, lemmatized, check, fout):
     new_sentence = ""
 
     for i in range(len(s)):
-        
+        if i == 0:
+            new_sentence += s[i]
 
 
 # This function is for SIMPLIFIED substitution of full forms
 def simple_substitute(sentence_text, sentence_tagged, fout):
     # TODO: Rework substitution function
     # 1. Take into account lemma not just the sentence text
-    # 2. Work with fullforms followed (preceded by) punctuation marks.
-    # 3. I think the current version always substitutes all occurrences of a single abbrev. these should be separated
-    # 4. Check if multiple possible abbrev. for the same full form are both shown.
-    # 5. If contracted abbreviation is last word in a sentence ending with a dot, remove duplicate dot.
+    # DONE: 2. Work with fullforms followed (preceded by) punctuation marks.
+    # DONE: 3. The current version always substitutes all occurrences of a single abbrev. these should be separated
+    # DONE: 4. Check if multiple possible abbrev. for the same full form are both shown.
+    # DONE: 5. If contracted abbreviation is last word in a sentence ending with a dot, remove duplicate dot.
+    # 6. Keep existing case consistent between full-form and abbrev.
+    # 7. Merge lemmas for masculine and feminine words
+    # 8. Output sentences with multiple abbreviations (ESPECIALLY if they're adjacent to each other)
 
     sentence_text_lemmatized = ""
     for word in sentence_tagged:
@@ -46,7 +54,7 @@ def simple_substitute(sentence_text, sentence_tagged, fout):
     # Checks by bruteforce any clear fullforms and substitutes them with abbreviations.
     # The modified sentences are put in "text/throwaway.txt"
     for check in ff_contractions:
-        split_sentence(sentence_text, check[0].lower(), fout)
+        split_sentence(sentence_text, check, fout)
 
 
 # Reads the infile passed as argument.
