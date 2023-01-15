@@ -29,7 +29,7 @@ def x_in_y(query, base):
     return False, False
 
 
-def split_sentence(sentence, check, fout):
+def split_sentence(sentence, check, fout1, fout2):
     ff = " " + check[0].lower()
     abbrev = " " + check[1].lower()
 
@@ -47,10 +47,11 @@ def split_sentence(sentence, check, fout):
             # If contracted abbreviation is last word in a sentence ending with a dot, remove duplicate dot.
             if sentence[-2:] != ".." and new_sentence[-2:] == "..":
                 new_sentence = new_sentence[:-1]
-            fout.write(new_sentence + "\n")
+            fout1.write(new_sentence + "\n")
+            fout2.write(sentence + "\n")
 
 
-def split_lemmatized(sentence, tagged, check, fout):
+def split_lemmatized(sentence, tagged, check, fout1, fout2):
     ff = check[0].lower().split(" ")    # [b, c]
     abbrev = check[1].lower()           # d
 
@@ -64,11 +65,11 @@ def split_lemmatized(sentence, tagged, check, fout):
     if a and b:
         if delemma[0][a:a+b] != delemma[1][a:a+b]:
             text_to_substitute = ' '.join(delemma[1][a:a+b]).lstrip()
-            split_sentence(sentence, [text_to_substitute, abbrev], fout)
+            split_sentence(sentence, [text_to_substitute, abbrev], fout1, fout2)
 
 
 # This function is for substitution of full forms
-def simple_substitute(sentence_text, sentence_tagged, fout):
+def simple_substitute(sentence_text, sentence_tagged, fout1, fout2):
     # DONE: 1. Take into account lemma not just the sentence text
     # DONE: 2. Work with fullforms followed (preceded by) punctuation marks.
     # DONE: 3. The current version always substitutes all occurrences of a single abbrev. these should be separated
@@ -80,18 +81,22 @@ def simple_substitute(sentence_text, sentence_tagged, fout):
     #       Probably I can find abbrev clusters by checking if the string inbetween them is all whitespace
     #       A function for this is str.isspace()
 
+    fout1.write(sentence_text + "\n")
+    fout2.write(sentence_text + "\n")
+
     # Checks by bruteforce any clear fullforms and substitutes them with abbreviations.
     # The modified sentences are put in "text/throwaway.txt"
     for check in ff_contractions:
-        split_sentence(sentence_text, check, fout)
-        split_lemmatized(sentence_text, sentence_tagged, check, fout)
+        split_sentence(sentence_text, check, fout1, fout2)
+        split_lemmatized(sentence_text, sentence_tagged, check, fout1, fout2)
 
 
 # Reads the infile passed as argument.
 # For each sentence in the infile prints out all SIMPLE substituted sentences in outfile
 def read_file(file):
     with open(file, "r", encoding="utf-8") as text_file:
-        with open(output, "a", encoding="utf-8") as fout:
+        with open(nn_input, "a", encoding="utf-8") as fout1:
+            fout2 = open(nn_output, "a", encoding="utf-8")
             text = text_file.read()
             # Split infile text by sentence
             sentences = text.split("\n\n")
@@ -107,7 +112,7 @@ def read_file(file):
                     elif line and line[0] != "#":
                         sentence_tagged.append(line)
                 if sentence_text:
-                    simple_substitute(sentence_text, sentence_tagged, fout)
+                    simple_substitute(sentence_text, sentence_tagged, fout1, fout2)
     return
 
 

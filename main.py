@@ -1,6 +1,7 @@
 from acro_list import *
 from sentence_gen import *
 from find_fullforms import *
+from split_data import *
 
 # File structure:
 # main.py
@@ -8,6 +9,7 @@ from find_fullforms import *
 #     --cut_defs
 #   -sentence_gen
 #   -find_fullforms
+#     --split_data
 
 input_file = "text/uwu.txt"
 
@@ -31,6 +33,7 @@ def main():
     # Mēģināsim nolasīt abbreviatūru atšifrējumus iekš marķēta teksta.
     if user_prompt("find and replace full forms in text with respective abbreviations"):
         find_fullforms()
+        split_data()
 
 
 if __name__ == "__main__":
