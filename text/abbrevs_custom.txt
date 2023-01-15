@@ -1,0 +1,13 @@
+utt.	un tā tālāk
+u.c.	un citi	un citas	un citus	un citām	un citiem
+u. c.	un citi	un citas	un citus	un citām	un citiem
+lpp.	lappuse	lappusi	lappusē	lappuses	lappušu	
+kr.	krievu	krona	kronas
+val.	valoda	valodu	valodā	valodai	valodām	valodas	valodās
+gr.	grieķu
+latv.	latviešu
+liet.	lietuviešu
+ig.	igauņu
+utj.	un tā joprojām
+pol.	politika politiķis politiķe politiku
+
