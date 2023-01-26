@@ -1,0 +1,3 @@
+The "conll" folder here should contain annotated Latvian text data using the conll format.
+
+This data is used to generate sentences with contracted abbreviations for the creation of the Sockeye dataset.
