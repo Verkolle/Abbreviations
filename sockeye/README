@@ -1,6 +1,8 @@
 This folder explains the creation of the Sockeye model and the training process.
 The trained model within the folder "Dati" uses the following Sockeye version: Sockeye 3.1.31
 The following site has been referenced for information on Sockeye commands: https://awslabs.github.io/sockeye/index.html
+Sadly I couldn't include the current model within the GitHub repository due to the files being way too large.
+I attampted to upload it with GitHub large file storage, but i was not able to make it work...
 
 Since Sockeye is built for Linux or MacOS systems the following model training is not doable on Windows devices.
 The code run in the creation of the current model is as follows:
