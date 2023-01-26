@@ -1,0 +1,16 @@
+This folder explains the creation of the Sockeye model and the training process.
+The trained model within the folder "Dati" uses the following Sockeye version: Sockeye 3.1.31
+The following site has been referenced for information on Sockeye commands: https://awslabs.github.io/sockeye/index.html
+
+Since Sockeye is built for Linux or MacOS systems the following model training is not doable on Windows devices.
+The code run in the creation of the current model is as follows:
+
+1. The installation of the Sockeye framework using the Dockerfile seen in the folder "Docker" 
+
+2. Running the Sockeye model training process.
+sudo docker run -it --rm -v $(pwd):/Dati/ viesturs/sockeye python -m sockeye.train --source "/Dati/train_input.txt" --target "/Dati/train_output.txt" --validation-source "/Dati/validate_input.txt" --validation-target "/Dati/validate_output.txt" --use-cpu --output "/Dati/model" --checkpoint-interval 500 --max-num-checkpoint-not-improve 3 
+
+3. Testing the trained model.
+sudo docker run -it --rm -v $(pwd):/Dati/ viesturs/sockeye python -m sockeye.train --model "/Dati/model" --input "/Dati/test_input.txt" --output "/Dati/generated_output.txt"   
+
+The values and commands used to train and test the Sockeye model can be changed and adapted as see fit.
